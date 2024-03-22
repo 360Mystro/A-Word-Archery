@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Trisection Construction App</title>   
+  </head>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Your Title</title>
+ 
+ <h1> <b>TRISECTION OF AN ANGLE (Approx.)</b></h1>
+
+  <body>  
+    <div Id="evaluation"></div>
+
+    <span Id="Trisection"></span><br>		
+
+    <div class="input-container">
+      <label for="TxtAngle"><b>Enter an angle or Drag the Red Dot:</b></label>
+	<br><input type="number" Id="TxtAngle" value="60"><br>
+       
+    <button onclick="drawAngle()"><b>TRISECT</b></button>	
+	</div>
+    <canvas Id="PicBox" width="880" height="600"></canvas>
+
+    <style>
+        .input-container {
+            display: flex;
+            align-items: center;
+            margin-left: 25px;
+        }
+        
+        input {
+            font-size: 25px;
+            width: 200px; /* Adjust the width as needed */
+            margin-left: 10px; /* Adjust the left margin as needed */
+        }
+      
+      button {
+        width: 150px;
+        height: 35px;
+        margin-left: 40px;
+      }	  
+      #Trisection{
+        font-size: 30px;
+        margin-left: 40px;
+      }
+	  
+	  body {
+	  background-color: powderblue;
+	  }
+    	h1 {
+    text-align: center;
+    color: DodgerBlue;
+    font-size: 2em; /* Example of using viewport units for font size */
+}
+
+canvas {
+    background-color: Cyan;
+
+    border: 1px solid black;
+    /* Example of using percentage width */
+    width: 90%;
+    /* Ensure the canvas maintains its aspect ratio */
+    height: auto;
+
+   
+    margin: 0 auto; /* Center the canvas horizontally */
+}
+
+label {
+    font-size: 120%; /* You may adjust the font size as needed */
+    margin-left: 5%; /* Example of using percentage margin */
+}
+    </style>
+
+    <script>	
+
+const canvas = document.getElementById("PicBox");
+const context = canvas.getContext("2d");
+const centerX = 400;
+const centerY = 500; // Adjusted centerY value
+const radius = 300;
+const radius4 = 400;
+let dragRadius = 20;
+let isDraggingAngleRay = false;
+let draggingCircle = false;
+let endX = centerX + radius;
+let endY = centerY;
+let angleRadians = 0;
+let angle = 0;
+
+function drawAngle() {
+    var angleDegrees = parseFloat(document.getElementById("TxtAngle").value);
+    var angleRadians = angleDegrees * Math.PI / 180;
+
+    endX = 400 + radius4 * Math.cos(-angleRadians);
+    endY = 500 + radius4 * Math.sin(-angleRadians); // Adjusted to move down by 100
+
+    context.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Draw base line
+    context.beginPath();
+    context.moveTo(400, 500); // Adjusted centerY value
+    context.lineTo(800, 500); // Adjusted centerY value
+    context.strokeStyle = "black";
+    context.stroke();
+
+    // Draw bisector line
+    var bisectorRadians = angleRadians / 2;
+    var bisectorEndX = 400 + 400 * Math.cos(bisectorRadians);
+    var bisectorEndY = 500 - 400 * Math.sin(bisectorRadians); // Adjusted to move down by 100
+    context.beginPath();
+    context.moveTo(400, 500); // Adjusted centerY value
+    context.lineTo(bisectorEndX, bisectorEndY);
+    context.strokeStyle = "blue";
+    context.stroke();
+
+    // Draw quad-sector lines
+    var quadSectorRadians = angleRadians / 4;
+    var quadSectorEndX = 400 + 400 * Math.cos(quadSectorRadians);
+    var quadSectorEndY = 500 - 400 * Math.sin(quadSectorRadians); // Adjusted to move down by 100
+    context.beginPath();
+    context.moveTo(400, 500); // Adjusted centerY value
+    context.lineTo(quadSectorEndX, quadSectorEndY);
+    context.strokeStyle = "blue";
+    context.stroke();
+
+    // Draw quad-sector baseline @ Radius 400
+    context.beginPath();
+    context.moveTo(800, 500); // Adjusted centerY value
+    context.lineTo(quadSectorEndX, quadSectorEndY);
+    context.strokeStyle = "red";
+    context.stroke();
+
+    // Draw angle ray
+    var angleEndX = 400 + 400 * Math.cos(angleRadians);
+    var angleEndY = 500 - 400 * Math.sin(angleRadians); // Adjusted to move down by 100
+    context.beginPath();
+    context.moveTo(400, 500); // Adjusted centerY value
+    context.lineTo(angleEndX, angleEndY);
+    context.strokeStyle = "black";
+    context.stroke();
+
+    // Draw angle arc3
+    context.beginPath();
+    context.arc(400, 500, 300, quadSectorRadians - (angleRadians) / 4, -(angleRadians + 0.087266), true);
+    context.strokeStyle = "blue";
+    context.stroke();
+
+    // Draw angle arc4
+    context.beginPath();
+    context.arc(400, 500, 400, quadSectorRadians - (angleRadians) / 4, -(angleRadians + 0.087266), true);
+    context.strokeStyle = "blue";
+    context.stroke();
+
+    //var D_Circle = parseFloat(document.getElementById("baseLength").value);
+			context.font = "12px Arial";
+			context.fillStyle = "green";
+			context.fillText("Drag Here", endX + 50, endY + 20);
+	
+    // Draw the drag circle at the end of the angle ray
+    context.beginPath();
+    context.arc(endX, endY, dragRadius, 0, 2 * Math.PI);
+    context.stroke();
+    context.fillStyle = "magenta";
+    context.fill();
+
+    // Calculate the angle label position
+    var angleLabelX = centerX - 20;
+    var angleLabelY = centerY + 20;
+    var angleLabelText = `${angleDegrees}°`;
+
+    // Draw the angle label
+    context.font = "20px Arial";
+    context.fillStyle = "red";
+    context.textAlign = "center";
+    context.fillText(angleLabelText, angleLabelX, angleLabelY);
+
+    // Calculate the base length of an equilateral triangle at radius 400
+    var baseLength = Math.sqrt((160000) + (160000) - (2 * 400 * 400 * Math.cos(angleRadians / 4)));
+    var Theda_Rad = ((90000 + 90000) - baseLength * baseLength) / (2 * 300 * 300);
+    var Theda_Deg = Math.acos(Theda_Rad) * 180 / Math.PI;
+    var Ang_t_Deg = (Theda_Deg * 3 - angleDegrees) / 4;
+    var Ang_t_Rad = Ang_t_Deg * Math.PI / 180;
+    var baseLen2 = Math.sqrt((160000) + (160000) - (2 * 400 * 400 * Math.cos(Ang_t_Rad)));
+    var Theda2_Rad = ((90000 + 90000) - (baseLen2 * baseLen2)) / (2 * 300 * 300);
+    var Tri_Deg = Math.acos(Theda2_Rad) * 180 / Math.PI;
+    var Trisection = Theda_Deg - Tri_Deg;
+    document.getElementById("Trisection").textContent = Trisection.toString();
+    var OA3 = Math.sin(Theda_Deg * Math.PI / 180) * 300;
+    var AA3 = Math.cos(Theda_Deg * Math.PI / 180) * 300;
+    var OA4 = Math.sin(Theda_Deg * 2 * Math.PI / 180) * 300;
+    var AA4 = Math.cos(Theda_Deg * 2 * Math.PI / 180) * 300;
+    var OA6 = Math.sin(Theda_Deg * 3 * Math.PI / 180) * 300;
+    var AA6 = Math.cos(Theda_Deg * 3 * Math.PI / 180) * 300;
+    var OA8 = Math.sin(Theda_Deg * 3 * Math.PI / 180) * 400;
+    var AA8 = Math.cos(Theda_Deg * 3 * Math.PI / 180) * 400;
+
+    // Draw Error outside the Angle
+    var Error = (Theda_Deg * 3) - angleDegrees;
+
+    var ErrorEndX = 700 - (300 - AA6);
+    var ErrorEndY = 500 - OA6; // Adjusted to move down by 100
+    context.beginPath();
+    context.moveTo(400, 500); // Adjusted centerY value
+    context.lineTo(ErrorEndX, ErrorEndY);
+    context.strokeStyle = "magenta";
+    context.stroke();
+
+    var ErrorExt2X = 700 - (300 - AA6);
+    var ErrorExt2Y = 500 - OA6; // Adjusted to move down by 100
+
+    const endAngle = ((Theda_Deg * 3) * Math.PI) / 180; // Convert 60 degrees to radians
+
+    // Draw the pie
+    context.beginPath();
+    context.moveTo(centerX, centerY);
+    context.arc(centerX, centerY, radius, -endAngle, -angleRadians);
+    context.closePath();
+
+    // Fill the pie with a solid color
+    context.fillStyle = "red";
+    context.fill();
+
+    // A² = b² + c² − 2bc × cos A
+    var AngT = (160000 + 160000) - (2 * 400 * 400 * Math.cos(Ang_t_Rad));
+    var AngM = Math.sqrt(AngT);
+    var ATT = Math.sqrt((160000 + 160000) - (2 * 400 * 400 * (Math.cos(Error * Math.PI / 180))));
+    var AngN = (90000 + 90000 - AngM * AngM) / (2 * 300 * 300);
+    var AngTm = Math.acos(AngN) * (180 / Math.PI);
+    var LenO3 = OA8;
+    var AngE = (Theda_Deg - AngTm);
+
+    var ErrorLabelText = `${Error}°`;
+    
+    if (Ang_t_Deg * 3 > 90 && Ang_t_Deg * 3 <= 180) {
+        var Len_SA2 = Math.sin((180 - (angleDegrees + (Error * 0.25))) * Math.PI / 180) * 400;
+        var Len_SA3 = Math.cos((180 - (angleDegrees + (Error * 0.25))) * Math.PI / 180) * 400;
+        var OVER90 = (180 - (Theda_Deg * 3));
+        var AO_ERROR = Math.sin((90 - OVER90) * Math.PI / 180) * 300;
+        var AA5 = Math.sin(OVER90 * Math.PI / 180) * 300;
+        var OA8 = Math.sin((angleDegrees - 90) * Math.PI / 180) * 400;
+        var OA9 = Math.sin(angleDegrees * Math.PI / 180) * 400;
+        var xx2 = -OA8;
+        var yy2 = OA9;
+
+    } else if (Ang_t_Deg * 3 <= 90) {
+        var Tri_X = Math.sin((AngE) * Math.PI / 180) * 300;
+        var Tri_Y = Math.cos((AngE) * Math.PI / 180) * 300;
+
+        var OA6 = Math.sin(Theda_Deg * 3 * Math.PI / 180) * 300;
+        var OA7 = Math.sin((90 - Theda_Deg * 3) * Math.PI / 180) * 300;
+        var OA8 = Math.cos((angleDegrees) * Math.PI / 180) * 400;
+        var OA9 = Math.sin(Theda_Deg * 3 * Math.PI / 180) * 400;
+        var xx2 = OA8;
+        var yy2 = OA9;
+
+    } else if (Ang_t_Deg * 3 >= 180) {
+        var Tri_X = Math.sin((AngE) * 2 * Math.PI / 180) * 300;
+        var Tri_Y = Math.cos((AngE) * 2 * Math.PI / 180) * 300;
+    }
+    context.beginPath();
+    context.arc(700 - (300 - AA3), 500 - OA3, 2, 0, 2 * Math.PI);
+    context.strokeStyle = "red";
+    context.stroke();
+
+    context.beginPath();
+    context.arc(700 - (300 - AA4), 500 - OA4, 2, 0, 2 * Math.PI);
+    context.strokeStyle = "red";
+    context.stroke();
+
+    context.beginPath();
+    context.arc(700 - (300 - AA6), 500 - OA6, 2, 0, 2 * Math.PI);
+    context.strokeStyle = "red";
+    context.stroke();
+
+    context.font = "12px Arial";
+    context.fillStyle = "red";
+    context.fillText("Radius", quadSectorEndX + 30, quadSectorEndY + baseLength / 2);
+
+    context.font = "12px Arial";
+    context.fillStyle = "blue";
+    context.fillText("bisector", bisectorEndX + 30, bisectorEndY);
+
+    context.font = "12px Arial";
+    context.fillStyle = "blue";
+    context.fillText("quadsector", quadSectorEndX + 35, quadSectorEndY);
+
+    context.font = "12px Arial";
+    context.fillStyle = "green";
+    context.fillText("Trisector", (400 + AA3) + 30, 500 - OA3);
+
+    context.font = "12px Arial";
+    context.fillStyle = "green";
+    context.fillText("Trisector", (400 + AA4) + 35, 500 - OA4);
+
+    context.font = "12px Arial";
+    context.fillStyle = "red";
+    context.fillText("E1", (400 + AA3) - 20, 500 - OA3 + 5);
+
+    context.font = "12px Arial";
+    context.fillStyle = "red";
+    context.fillText("E2", (400 + AA4) - 20, 500 - OA4 + 5);
+
+    context.font = "12px Arial";
+    context.fillStyle = "red";
+    context.fillText("E3", (400 + AA6) - 20, 500 - OA6 + 10);
+
+    var E_bisectorRads = ((Ang_t_Deg) + (angleDegrees)) * Math.PI / 180;
+    var bisectorEndX = 400 + 400 * Math.cos(E_bisectorRads);
+    var bisectorEndY = 500 - 400 * Math.sin(E_bisectorRads);
+
+    var E_baseLen = Math.sqrt((160000) + (160000) - (2 * 400 * 400 * Math.cos(Ang_t_Rad)));
+    var E_Tri = ((90000 + 90000) - (E_baseLen * E_baseLen)) / (2 * 300 * 300);
+    var Deg = Math.acos(E_Tri) * 180 / Math.PI;
+
+    var Approx_Tri = (Theda_Deg) - (Deg)
+    var Approx_Tri_Rad = (Approx_Tri * Math.PI / 180);
+
+    var Tri_MeX = Math.cos(Approx_Tri * Math.PI / 180) * 300;
+    var Tri_MeY = Math.sin(Approx_Tri * Math.PI / 180) * 300;
+    var Tri2_X = Math.cos(Approx_Tri_Rad * 2) * 300;
+    var Tri2_Y = Math.sin(Approx_Tri_Rad * 2) * 300;
+
+    context.beginPath();
+    context.moveTo(bisectorEndX, bisectorEndY);
+    context.lineTo(angleEndX, angleEndY);
+    context.strokeStyle = "green";
+    context.stroke();
+
+    var Tri_EndX = 700 - (300 - AA6);
+    var Tri_EndY = 500 - OA6;
+
+    var TriAngleEndX = 400 + Tri_MeX;
+    var TriAngleEndY = 500 - Tri_MeY;
+    context.beginPath();
+    context.moveTo(400, 500);
+    context.lineTo(TriAngleEndX, TriAngleEndY);
+    context.strokeStyle = "green";
+    context.stroke();
+
+    var TriAngleEndX2 = 400 + Tri2_X;
+    var TriAngleEndY2 = 500 - Tri2_Y;
+    context.beginPath();
+    context.moveTo(400, 500);
+    context.lineTo(TriAngleEndX2, TriAngleEndY2);
+    context.strokeStyle = "green";
+    context.stroke();
+}
+// Add Touch Event Listeners
+canvas.addEventListener("touchstart", onTouchStart);
+canvas.addEventListener("touchmove", onTouchMove);
+canvas.addEventListener("touchend", onTouchEnd);
+
+function getNormalizedCoordinates(event) {
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+    let x, y;
+    if (event.touches) {
+        const touch = event.touches[0];
+        x = (touch.clientX - rect.left) * scaleX;
+        y = (touch.clientY - rect.top) * scaleY;
+    } else {
+        x = (event.clientX - rect.left) * scaleX;
+        y = (event.clientY - rect.top) * scaleY;
+    }
+    return { x, y };
+}
+
+
+
+
+// Update Event Handling Functions
+// Touch event handlers
+function onTouchStart(event) {
+    event.preventDefault();
+    const { x, y } = getNormalizedCoordinates(event);
+    if (isInsideDragCircle(x, y)) {
+        isDraggingAngleRay = true;
+    }
+}
+
+function onTouchMove(event) {
+    event.preventDefault();
+    if (isDraggingAngleRay) {
+        const { x, y } = getNormalizedCoordinates(event);
+        const angleRadians = Math.atan2(y - centerY, x - centerX);
+        let angleDegrees = -angleRadians * (180 / Math.PI);
+        if (angleDegrees < 0) {
+            angleDegrees += 360;
+        }
+        document.getElementById("TxtAngle").value = angleDegrees.toFixed(2);
+        drawAngle();
+    }
+}
+
+function onTouchEnd(event) {
+    event.preventDefault();
+    isDraggingAngleRay = false;
+}
+
+// Mouse event handlers
+function onMouseDown(event) {
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+    const mouseX = (event.clientX - rect.left) * scaleX;
+    const mouseY = (event.clientY - rect.top) * scaleY;
+
+    if (isInsideDragCircle(mouseX, mouseY)) {
+        canvas.style.cursor = "move";
+        isDraggingAngleRay = true;
+    }
+}
+
+function onMouseMove(event) {
+    if (isDraggingAngleRay) {
+        const { x, y } = getNormalizedCoordinates(event);
+        const angleRadians = Math.atan2(y - centerY, x - centerX);
+        let angleDegrees = -angleRadians * (180 / Math.PI);
+
+        if (angleDegrees < 0) {
+            angleDegrees += 360;
+        }
+
+        document.getElementById("TxtAngle").value = angleDegrees.toFixed(2);
+        drawAngle();
+    }
+}
+
+function onMouseUp(event) {
+    isDraggingAngleRay = false;
+    canvas.style.cursor = "default";
+}
+
+// Event listeners for mouse interactions
+canvas.addEventListener("mousedown", onMouseDown);
+canvas.addEventListener("mousemove", onMouseMove);
+canvas.addEventListener("mouseup", onMouseUp);
+
+
+
+// Draw the drag circle with a stroke for better visibility
+context.beginPath();
+context.arc(endX, endY, dragRadius, 0, 2 * Math.PI);
+context.strokeStyle = "blue"; // Change the color as needed
+context.lineWidth = 2; // Adjust the line width as needed
+context.stroke();
+context.fillStyle = "magenta";
+context.fill();
+
+
+
+
+function isInsideDragCircle(x, y) {
+    const distance = Math.sqrt(Math.pow(x - endX, 2) + Math.pow(y - endY, 2));
+    return distance <= dragRadius;
+}
+
+// Initialize the canvas by drawing the default angle
+drawAngle();
+
+
+    </script>
+  
+	 </body>
+</html>	 

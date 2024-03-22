@@ -1,0 +1,169 @@
+<!-- subscriberLogin.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subscriber Login</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+         
+                /* Set the background image */
+                background-image: url('gallows1.jpg');
+                /* Adjust background size to cover the entire body */
+                background-size: 90% 90%; /* You can adjust the percentages as needed */
+                /* Center the background image */
+                background-position: center;
+                /* Ensure the background image is not repeated */
+                background-repeat: no-repeat;
+                /* Set other styles as needed */         
+
+        }
+        .container {
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+        }
+        label {
+            display: block;
+            margin-bottom: 10px;
+        }
+        input[type="text"],
+        input[type="email"],
+        input[type="password"],
+        input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+        .forgot-password {
+            text-align: center;
+        }
+        .forgot-password a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Subscriber Login</h1>
+        <form id="loginForm">
+            <label for="username">Username*</label>
+            <input type="text" id="username" name="username" required>
+
+            <label for="email">Email*</label>
+            <input type="email" id="email" name="email" required>
+
+            <label for="password">Password (min 8 characters, at least one capital letter, and at least one number)*</label>
+            <input type="password" id="password" name="password" pattern="(?=.*\d)(?=.*[A-Z]).{8,}" title="Password must contain at least 8 characters, including at least one number and one capital letter" required>
+            <p id="passwordError" class="error-message">Password does not meet the criteria.</p>
+
+            <label for="age">Age (16+)*</label>
+            <input type="number" id="age" name="age" min="16" required>
+
+            <input type="submit" value="Login">
+        </form>
+        <p class="forgot-password">Forgot your password? <a href="#">Reset it here</a></p>
+    </div>
+    
+    <script>
+
+// Preload the new image from the specified directory path
+var backgroundImage = new Image();
+backgroundImage.onload = function() {
+    // Create a canvas element to convert the image to a data URL
+    var canvas = document.createElement('canvas');
+    var ctx = canvas.getContext('2d');
+    canvas.width = this.width;
+    canvas.height = this.height;
+    ctx.drawImage(this, 0, 0);
+    
+    // Convert the image to a data URL
+    var dataURL = canvas.toDataURL();
+
+    // Store the data URL in local storage
+    localStorage.setItem('backgroundImage', dataURL);
+
+    // Set the new background image
+    document.body.style.backgroundImage = 'url(' + dataURL + ')';
+};
+backgroundImage.src = 'gallows1.jpg';
+
+
+
+        document.getElementById('loginForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            // Retrieve form data
+            var username = document.getElementById('username').value;
+            var email = document.getElementById('email').value;
+            var password = document.getElementById('password').value;
+            var age = document.getElementById('age').value;
+
+            function validateEmail(email) {
+                // Regular expression for validating email addresses
+                var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                return emailPattern.test(email);
+            }
+
+            // Create an object to store subscriber data
+            var newSubscriberData = {
+                username: username,
+                email: email,
+                password: password,
+                age: age
+            };
+
+            // Retrieve existing subscribers or initialize an empty array
+            var existingSubscribers = JSON.parse(localStorage.getItem('subscribers')) || [];
+
+            // Merge new subscriber with existing subscribers
+            existingSubscribers.push(newSubscriberData);
+
+            // Store the combined list back in local storage
+            localStorage.setItem('subscribers', JSON.stringify(existingSubscribers));
+
+            alert('You have been successfully registered as a subscriber!');
+            // Optional: Redirect to a different page after registration
+            window.location.href = 'Archer_Gallows.html';
+
+        });
+
+        backgroundImageGame.onerror = function() {
+            // Fallback background color in case image fails to load
+            document.body.style.backgroundColor = 'lightgray';
+        };
+
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Archer's App: Personalized Learning Experience</title>
+    <style>
+    
+              body {
+            background: url('Archer_1.jpg') no-repeat center center fixed;
+            background-size: cover;
+            margin: 0;  
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+        }
+        .container {
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);           
+                max-width: 800px;
+                margin: 20px auto;
+                padding: 20px;
+                background-color: rgba(255, 255, 255, 0); /* Transparent white background */
+                border-radius: 8px; 
+                font-size:25px; 
+                float: right; /* Set the container to float left */   
+            }
+   
+        h1 {
+            color: #333;
+        }
+        p {
+            color: #666;
+        }
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
+        h1 {
+            color: #4400ff; /* Change to your desired color value */
+            font-size:70px;
+        }
+        h2 {
+            color: #4400ff; /* Change to your desired color value */
+            font-size:40px;
+        }
+        p {
+            color: #0f0f0f; /* Change to your desired color value */
+            font-size:20px;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Archer's Word Game:</h1>
+        <h2>A Personalized Learning Experience</h2>
+        <p>Welcome to Archer's Word Game, a personalized learning experience tailored to each child's needs!</p>
+        <p>This app is designed to help kids improve their spelling and vocabulary skills in a fun and engaging way.</p>
+        <p>Parents can add words that are correlated to their child's curriculum, also adding hints to help teaching the diffinition of each word, providing a customized learning experience.</p>
+        <p>By playing Archer's Word Game, children can enhance their spelling abilities and understanding of the word's meanings, while enjoying a fun and interactive game.</p>
+        <a href="#" class="btn" id="loginBtn">Login</a>
+        <a href="#" class="btn" id="playBtn">Play Game</a>
+    </div>
+    <img id="gif-image3" src="archer3.gif" alt="GIF" style="position: absolute; bottom: 10px; right: 50px;" />
+
+    <script>
+
+
+// Preload the new image from the specified directory path
+var backgroundImage = new Image();
+backgroundImage.onload = function() {
+    // Create a canvas element to convert the image to a data URL
+    var canvas = document.createElement('canvas');
+    var ctx = canvas.getContext('2d');
+    canvas.width = this.width;
+    canvas.height = this.height;
+    ctx.drawImage(this, 0, 0);
+    
+    // Convert the image to a data URL
+    var dataURL = canvas.toDataURL();
+
+    // Store the data URL in local storage
+    localStorage.setItem('backgroundImage', dataURL);
+
+    // Set the new background image
+    document.body.style.backgroundImage = 'url(' + dataURL + ')';
+};
+backgroundImage.src = 'Archer_1.jpg';
+
+        // JavaScript code to handle login button click event
+        document.getElementById('loginBtn').addEventListener('click', function(event) {
+            event.preventDefault();
+            // Add your code here to collect user info and store it in local storage
+            window.location.href = "Sub_login.html";        
+        });
+        
+ // JavaScript code to handle play game button click event
+ document.getElementById('playBtn').addEventListener('click', function(event) {
+    event.preventDefault();
+    // Add your code here to redirect users to the game page
+  
+    window.location.href = "Archer_Gallows.html";
+  
+});
+    </script>
+</body>
+</html>

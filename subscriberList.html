@@ -1,0 +1,63 @@
+<!-- subscriberList.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subscriber List</title>
+</head>
+<body>
+    <div class="container">
+        <h1>Subscriber List</h1>
+        <ul id="subscriberList">
+            <!-- Subscriber data will be dynamically inserted here -->
+        </ul>
+    </div>
+    <button onclick="clearSubscriberList()">Clear Subscriber List</button>
+    <script>
+        // Retrieve subscriber data from local storage
+        var subscriberDataString = localStorage.getItem('subscribers');
+        console.log('Retrieved Subscriber Data String:', subscriberDataString);
+
+        try {
+            // Parse the string back into an array of objects
+            var subscriberData = JSON.parse(subscriberDataString);
+
+            // Get the subscriber list element
+            var subscriberList = document.getElementById('subscriberList');
+
+            // Clear existing content
+            subscriberList.innerHTML = '';
+
+            // Check if there's any subscriber data available
+            if (subscriberData && Array.isArray(subscriberData)) {
+                // Iterate over the subscriber data and create list items
+                subscriberData.forEach(function(subscriber) {
+                    var listItem = document.createElement('li');
+                    listItem.textContent = `
+                        Username: ${subscriber.username}, 
+                        Email: ${subscriber.email}, 
+                        Password: ${subscriber.password}, 
+                        Age: ${subscriber.age}
+                    `;
+                    subscriberList.appendChild(listItem);
+                });
+            } else {
+                // If no subscriber data available, display a message
+                var listItem = document.createElement('li');
+                listItem.textContent = 'No subscribers found.';
+                subscriberList.appendChild(listItem);
+            }
+        } catch (error) {
+            console.error('Error parsing subscriber data:', error);
+        }
+
+        // Function to clear subscriber data from local storage
+        function clearSubscriberList() {
+            localStorage.removeItem('subscribers');
+            alert('Subscriber list has been cleared.');
+        }
+
+    </script>
+</body>
+</html>

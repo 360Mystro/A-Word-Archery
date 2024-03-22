@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Archer's Gallows</title>
+    <link rel="stylesheet" href="style.css">
+    
+    <style>
+
+        .modal-container {
+            display: none;
+            position: fixed;
+            top: 20%;
+            left: 50%;
+            transform: translate(-50%, -50%); /* Center the container */
+            width: 18.75%; /* 25% reduction from the original width */
+            height: 18.75%; /* 25% reduction from the original height */
+            background-color: rgba(0, 0, 0, 0.5); /* Transparent background */
+            z-index: 9999;
+        }
+        
+        .modal-content {
+            position: absolute;
+            top: 50%;           
+            right: 0;
+            text-align: center;
+        }
+        #backgroundImageList{
+            max-width: 100%; /* Keep the image within the container width */
+            max-height: 75%; /* Adjust the maximum height as needed */
+            display: block;
+            margin: 0 auto; /* Center the image horizontally */   
+        }
+
+        #gif-image {
+            max-width: 100%; /* Keep the image within the container width */
+            max-height: 75%; /* Adjust the maximum height as needed */
+            display: block;
+            margin: 0 auto; /* Center the image horizontally */
+        }
+        
+        .lost-word-message {
+            font-size: 3em; /* 25% reduction from the original font size */
+            color: #f3efef; /* Red color */
+            margin-bottom: 20px; /* Separate from the image */
+        }
+        
+        .close-btn {
+            background-color: #004A7F;
+            -webkit-border-radius: 10px;
+            border-radius: 10px;
+            border: none;
+            color: #FFFFFF;
+            cursor: pointer;
+            font-family: Arial;
+            font-size: 30px;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            -webkit-animation: glowing 1500ms infinite;
+            -moz-animation: glowing 1500ms infinite;
+            -o-animation: glowing 1500ms infinite;
+            animation: glowing 1500ms infinite;
+            display: none;
+        }
+        
+      
+          @-webkit-keyframes glowing {
+            0% { background-color: #B20000; -webkit-box-shadow: 0 0 3px #B20000; }
+            50% { background-color: #FF0000; -webkit-box-shadow: 0 0 40px #FF0000; }
+            100% { background-color: #B20000; -webkit-box-shadow: 0 0 3px #B20000; }
+          }
+          
+          @-moz-keyframes glowing {
+            0% { background-color: #B20000; -moz-box-shadow: 0 0 3px #B20000; }
+            50% { background-color: #FF0000; -moz-box-shadow: 0 0 40px #FF0000; }
+            100% { background-color: #B20000; -moz-box-shadow: 0 0 3px #B20000; }
+          }
+          
+          @-o-keyframes glowing {
+            0% { background-color: #B20000; box-shadow: 0 0 3px #B20000; }
+            50% { background-color: #FF0000; box-shadow: 0 0 40px #FF0000; }
+            100% { background-color: #B20000; box-shadow: 0 0 3px #B20000; }
+          }
+          
+          @keyframes glowing {
+            0% { background-color: #B20000; box-shadow: 0 0 3px #B20000; }
+            50% { background-color: #FF0000; box-shadow: 0 0 40px #FF0000; }
+            100% { background-color: #B20000; box-shadow: 0 0 3px #B20000; }
+          }  
+                
+        .close-btn:hover {
+            background-color: #555;
+        }       
+        
+    #viewScoreboardButton {
+        margin-top: 10px;
+        cursor: pointer;
+        position: absolute; bottom: 10px; right: 50px;
+        top: 90%;
+        color: rgb(240, 243, 241);   
+        background-color: rgb(13, 131, 28);
+    }
+    </style>
+</head>
+
+<body>
+   
+    <img src="Sunday.gif" id="image" style="display: none;">
+    <div id="base64Result"></div>
+
+    <div id="startScreen">
+        <h1>Archer's Gallows</h1>
+        <input type="text" id="playerNameInput" placeholder="Enter Your Name" />
+        <button type="button" id="startGameButton">Start Game</button>
+        <div id="button-container"></div>
+
+        <p id="randomWord">Click the button to generate a random word.</p>
+        <p id="searchResult">Search Result: No letter selected.</p><br>
+               
+        <div id="wordLengthContainer">
+            <label for="wordLength">This Word Has </label>
+            &nbsp;&nbsp;&nbsp; <!-- Three non-breaking spaces -->
+            <span id="wordLengthLabel"> 0 </span>
+            &nbsp;&nbsp;&nbsp; <!-- Three non-breaking spaces -->
+            <label for="wordLength2"> Letters</label>
+        </div>               
+
+        <button type="submit" class="genButton">New Word!</button>
+                
+        <div id="positionContainer" class="position-container"></div>
+
+        <div id="LetterCountLabel">Letter Count: 0</div>
+        
+        <div id="playerInfoContainer">
+            <label for="currentPlayerName">Player:</label>
+            <span id="currentPlayerNameLabel">-</span>
+            <br>
+            <label for="currentPlayerScore">Score:</label>
+            <span id="currentPlayerScoreLabel">-</span>
+        </div>
+
+       <button id="hintButton" class="genHintButton">Buy a Hint!</button>
+       <button type="submit" class="genHintButton">Buy a Hint!</button>
+        <label id="hintLabel" style="display: none;"></label>
+        
+        <div id="winnerContainer" class="flex-container">
+            <div class="congratulations-container">
+                <p id="congratulations">😊 Congratulations! You've WON! 😊</p>
+            </div>        
+        </div>
+        <div id="winnerContainer2" class="flex-container">
+            <div class="face-container">
+                <div class="face" id="face1">
+                    <div class="eye1 eyes"></div>
+                    <div class="eye2 eyes"></div>
+                    <div class="mouth"></div>
+                </div>
+                <div class="face" id="face2">
+                    <div class="eye1 eyes"></div>
+                    <div class="eye2 eyes"></div>
+                    <div class="mouth"></div>
+                </div>
+            </div>
+        </div>               
+        <button id="viewScoreboardButton">Scoreboard</button>    
+    </div>
+
+    <div id="scoreboardContainer" class="hidden">
+        <h2>Top 10 Scores</h2>
+        <ul id="scoreboardList"></ul>
+        <button id="exitButton">Exit</button>
+       
+       
+    </div>
+    <button id="closeWordListButton">Toggle Words</button>
+ 
+<div id="manageWords" style="display: none;">
+
+    <button type="button" id="addWordButton">Add Word</button>   
+    <input type="text" id="newWordInput" placeholder="Enter a New Word">
+    <input type="text" id="newHintInput" placeholder="Enter Hint">
+    <h2>Manage Words</h2>
+    <ul id="wordsList"></ul>   
+
+</div>
+
+    <div id="missCountLabel">Misses: 0</div>   
+
+    <div id="image-container-game">
+        <img id="gif-image" src="archer2.gif" width="800" height="79" alt="GIF Image">
+        <img id="gif-image" src="" alt="Letter found" style="display: none;">
+    </div>
+
+    <img id="gif-image3" src="archer3.gif" alt="GIF" style="display: none;" />
+    
+    <script type="text/javascript" src="Archer_Gallows.js"></script>
+
+    <div id="modalContainer" class="modal-container">
+        <div class="modal-content">
+            <img id="sadFace" src="" alt="Sad Face">
+            <div id="lostWordMessage" class="lost-word-message"></div>
+            <button class="close-btn">Close</button>
+        </div>
+    </div>
+    
+    
+
+
+    <script>
+        
+    </script>
+    
+  </body>
+
+
+  </html>
